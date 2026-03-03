@@ -1,0 +1,22 @@
+# PowerShell
+*~
+*.swp
+*.log
+*.err
+*.pid
+*.bak
+*.trc
+.vscode/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msu
+*.msp
+*.sdb
