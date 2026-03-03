@@ -14,10 +14,11 @@ if (-not $isAdmin) {
     else {
         # Si se ejecuta directamente en memoria (con el comando irm | iex), no hay archivo que relanzar.
         Write-Host "==========================================================" -ForegroundColor Red
-        Write-Host "Este programa se ejecuta directamente de forma online. " -ForegroundColor Red
-        Write-Host "Debes abrir PowerShell COMO ADMINISTRADOR (Click derecho -> Ejecutar como Administrador) y volver a pegar el comando." -ForegroundColor Red
+        Write-Host "Este programa se ejecuta de forma online." -ForegroundColor Red
+        Write-Host "Debe abrir PowerShell COMO ADMINISTRADOR." -ForegroundColor Red
+        Write-Host "(Click derecho -> Ejecutar como Administrador) y volver a pegar el comando." -ForegroundColor Red
         Write-Host "==========================================================" -ForegroundColor Red
-        Start-Sleep -Seconds 5
+        Start-Sleep -Seconds 10
     }
     
     # 3. Cerramos la consola actual que no tiene permisos
