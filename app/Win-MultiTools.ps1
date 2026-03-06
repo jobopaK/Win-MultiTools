@@ -1,18 +1,26 @@
-function Test-RepararRed {
+﻿function Test-RepararRed {
     Clear-Host
     Write-Host "========================================" -ForegroundColor Cyan
-    Write-Host "   REPARACIÓN DE CONEXIÓN DE RED        " -ForegroundColor Cyan
+    Write-Host "   REPARACIÓN DE CONEXIONES DE RED        " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
 
     # Advertencia de seguridad sobre IPs estáticas / DHCP
-    Write-Host "`nATENCIÓN: Esto restablecerá la red a sus valores de fábrica (DHCP)." -ForegroundColor Red
-    Write-Host "Si tu equipo o empresa requiere una IP manual/estática, perderás esa configuración." -ForegroundColor Red
-    $confirmacion = Read-Host "¿Estás seguro de que deseas continuar? (S/N)"
+    Write-Host "`nATENCIÓN: Esto restablecerá la red a sus valores de fábrica." -ForegroundColor Red
+    Write-Host "Si tu equipo requiere una IP manual/estática, perderás esa configuración." -ForegroundColor Red
+    while ($true) {
+        $confirmacion = Read-Host "¿Desea reestablecer todos los valores de red a sus valores por defecto? (S/N)"
 
-    if ($confirmacion -notmatch "^[Ss]$") {
-        Write-Host "`nOperación cancelada. Volviendo al menú principal..." -ForegroundColor Yellow
-        Start-Sleep -Seconds 2
-        return # Sale de la función y vuelve al menú
+        if ($confirmacion -match "^[Ss]$") {
+            break # Continuar
+        }
+        elseif ($confirmacion -match "^[Nn]$") {
+            Write-Host "`nOperación cancelada. Presione Entrar para volver..." -ForegroundColor Yellow
+            $null = Read-Host
+            return "CANCEL"
+        }
+        else {
+            Write-Host "Error: Por favor, introduce 'S' para Sí o 'N' para No." -ForegroundColor Red
+        }
     }
 
     Write-Host "`nIniciando diagnóstico y reparación de adaptadores...`n" -ForegroundColor Yellow
@@ -43,8 +51,6 @@ function Test-RepararRed {
     
     Write-Host "NOTA: Para que los cambios surtan efecto por completo, reinicia el equipo." -ForegroundColor DarkYellow
     
-    Write-Host "`nPulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 
@@ -55,19 +61,18 @@ function Set-Volumen {
     Write-Host "========================================" -ForegroundColor Cyan
 
     # 1. Pedimos al usuario el porcentaje deseado
-    $inputVolumen = Read-Host "`nIntroduce el nivel de volumen deseado (0 al 100)"
+    while ($true) {
+        $inputVolumen = Read-Host "`nIntroduce el nivel de volumen deseado (0 al 100)"
 
-    # Validamos que lo que ha escrito sea un número entre 0 y 100
-    if ($inputVolumen -match "^\d+$" -and [int]$inputVolumen -ge 0 -and [int]$inputVolumen -le 100) {
-        $volumenDeseado = [int]$inputVolumen
+        # Validamos que lo que ha escrito sea un número entre 0 y 100
+        if ($inputVolumen -match "^\d+$" -and [int]$inputVolumen -ge 0 -and [int]$inputVolumen -le 100) {
+            $volumenDeseado = [int]$inputVolumen
+            break
+        }
+        else {
+            Write-Host "Error: Debes introducir un número válido entre 0 y 100." -ForegroundColor Red
+        }
     }
-    else {
-        Write-Host "`nError: Debes introducir un número válido entre 0 y 100." -ForegroundColor Red
-        Start-Sleep -Seconds 2
-        return
-    }
-
-    Write-Host "`nAjustando el volumen al $volumenDeseado%..." -ForegroundColor Yellow
 
     # 2. Inyectamos C# para hablar con la API de Windows (Solo si no se ha inyectado ya)
     if (-not ("ControladorAudio" -as [type])) {
@@ -118,10 +123,8 @@ function Set-Volumen {
     # 3. Ejecutamos el cambio de volumen usando la clase que acabamos de crear
     [ControladorAudio]::SetVolumen($volumenDeseado)
 
-    Write-Host "¡Volumen ajustado correctamente al $volumenDeseado%!" -ForegroundColor Green
+    Write-Host "`n¡Volumen ajustado correctamente al $volumenDeseado%!" -ForegroundColor Green
     
-    Write-Host "`nPulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 
@@ -182,8 +185,6 @@ function Test-LimpiarTemporales {
     Write-Host "========================================`n"
     
     # Pausa para que el usuario pueda leer los resultados antes de volver al menú
-    Write-Host "Pulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 
@@ -240,11 +241,15 @@ while ($true) {
         '1' {
             Write-Host "Ejecutando opciones de Red..." -ForegroundColor Yellow
             if (Get-Command "Test-RepararRed" -ErrorAction SilentlyContinue) {
-                Test-RepararRed
+                $resultado = Test-RepararRed
+                if ($resultado -eq "CANCEL") {
+                    continue
+                }
             }
             else {
                 Write-Host "La función Test-RepararRed no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '2' {
@@ -255,6 +260,7 @@ while ($true) {
             else {
                 Write-Host "La función Test-LimpiarTemporales no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '3' {
@@ -265,11 +271,12 @@ while ($true) {
             else {
                 Write-Host "La función Set-Volumen no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '0' {
             Write-Host "Saliendo del programa..." -ForegroundColor Green
-            break
+            exit
         }
         default {
             Write-Host "Opción no válida. Por favor, selecciona una opción correcta." -ForegroundColor Red

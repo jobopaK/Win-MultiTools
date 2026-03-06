@@ -12,18 +12,18 @@ Write-Host "Compilando Win-MultiTools.ps1 en $OutFile..." -ForegroundColor Cyan
 # Obtener todos los archivos .ps1 (excepto el menú) y añadirlos al principio
 Get-ChildItem -Path $SrcDir -Filter "*.ps1" -Recurse | Where-Object { $_.Name -notmatch "MainMenu" } | Sort-Object Name | ForEach-Object {
     Write-Host "Añadiendo: $($_.Name)" -ForegroundColor Gray
-    $content = Get-Content -Path $_.FullName -Raw
-    Add-Content -Path $OutFile -Value $content
-    Add-Content -Path $OutFile -Value "`r`n"
+    $content = Get-Content -Path $_.FullName -Raw -Encoding UTF8
+    Add-Content -Path $OutFile -Value $content -Encoding UTF8
+    Add-Content -Path $OutFile -Value "`r`n" -Encoding UTF8
 }
 
 # Obtener el archivo del menú y añadirlo al final
 $MenuFile = Get-ChildItem -Path $SrcDir -Filter "*MainMenu.ps1" -Recurse | Select-Object -First 1
 if ($MenuFile) {
     Write-Host "Añadiendo: $($MenuFile.Name) (Main Menu)" -ForegroundColor Gray
-    $content = Get-Content -Path $MenuFile.FullName -Raw
-    Add-Content -Path $OutFile -Value $content
-    Add-Content -Path $OutFile -Value "`r`n"
+    $content = Get-Content -Path $MenuFile.FullName -Raw -Encoding UTF8
+    Add-Content -Path $OutFile -Value $content -Encoding UTF8
+    Add-Content -Path $OutFile -Value "`r`n" -Encoding UTF8
 }
 
 Write-Host "Compilación completada." -ForegroundColor Green

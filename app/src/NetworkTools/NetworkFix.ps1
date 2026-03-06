@@ -1,18 +1,26 @@
 function Test-RepararRed {
     Clear-Host
     Write-Host "========================================" -ForegroundColor Cyan
-    Write-Host "   REPARACIÓN DE CONEXIÓN DE RED        " -ForegroundColor Cyan
+    Write-Host "   REPARACIÓN DE CONEXIONES DE RED        " -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
 
     # Advertencia de seguridad sobre IPs estáticas / DHCP
-    Write-Host "`nATENCIÓN: Esto restablecerá la red a sus valores de fábrica (DHCP)." -ForegroundColor Red
-    Write-Host "Si tu equipo o empresa requiere una IP manual/estática, perderás esa configuración." -ForegroundColor Red
-    $confirmacion = Read-Host "¿Estás seguro de que deseas continuar? (S/N)"
+    Write-Host "`nATENCIÓN: Esto restablecerá la red a sus valores de fábrica." -ForegroundColor Red
+    Write-Host "Si tu equipo requiere una IP manual/estática, perderás esa configuración." -ForegroundColor Red
+    while ($true) {
+        $confirmacion = Read-Host "¿Desea reestablecer todos los valores de red a sus valores por defecto? (S/N)"
 
-    if ($confirmacion -notmatch "^[Ss]$") {
-        Write-Host "`nOperación cancelada. Volviendo al menú principal..." -ForegroundColor Yellow
-        Start-Sleep -Seconds 2
-        return # Sale de la función y vuelve al menú
+        if ($confirmacion -match "^[Ss]$") {
+            break # Continuar
+        }
+        elseif ($confirmacion -match "^[Nn]$") {
+            Write-Host "`nOperación cancelada. Presione Entrar para volver..." -ForegroundColor Yellow
+            $null = Read-Host
+            return "CANCEL"
+        }
+        else {
+            Write-Host "Error: Por favor, introduce 'S' para Sí o 'N' para No." -ForegroundColor Red
+        }
     }
 
     Write-Host "`nIniciando diagnóstico y reparación de adaptadores...`n" -ForegroundColor Yellow
@@ -43,6 +51,4 @@ function Test-RepararRed {
     
     Write-Host "NOTA: Para que los cambios surtan efecto por completo, reinicia el equipo." -ForegroundColor DarkYellow
     
-    Write-Host "`nPulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }

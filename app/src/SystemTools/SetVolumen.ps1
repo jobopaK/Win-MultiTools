@@ -5,19 +5,18 @@ function Set-Volumen {
     Write-Host "========================================" -ForegroundColor Cyan
 
     # 1. Pedimos al usuario el porcentaje deseado
-    $inputVolumen = Read-Host "`nIntroduce el nivel de volumen deseado (0 al 100)"
+    while ($true) {
+        $inputVolumen = Read-Host "`nIntroduce el nivel de volumen deseado (0 al 100)"
 
-    # Validamos que lo que ha escrito sea un número entre 0 y 100
-    if ($inputVolumen -match "^\d+$" -and [int]$inputVolumen -ge 0 -and [int]$inputVolumen -le 100) {
-        $volumenDeseado = [int]$inputVolumen
+        # Validamos que lo que ha escrito sea un número entre 0 y 100
+        if ($inputVolumen -match "^\d+$" -and [int]$inputVolumen -ge 0 -and [int]$inputVolumen -le 100) {
+            $volumenDeseado = [int]$inputVolumen
+            break
+        }
+        else {
+            Write-Host "Error: Debes introducir un número válido entre 0 y 100." -ForegroundColor Red
+        }
     }
-    else {
-        Write-Host "`nError: Debes introducir un número válido entre 0 y 100." -ForegroundColor Red
-        Start-Sleep -Seconds 2
-        return
-    }
-
-    Write-Host "`nAjustando el volumen al $volumenDeseado%..." -ForegroundColor Yellow
 
     # 2. Inyectamos C# para hablar con la API de Windows (Solo si no se ha inyectado ya)
     if (-not ("ControladorAudio" -as [type])) {
@@ -68,8 +67,6 @@ function Set-Volumen {
     # 3. Ejecutamos el cambio de volumen usando la clase que acabamos de crear
     [ControladorAudio]::SetVolumen($volumenDeseado)
 
-    Write-Host "¡Volumen ajustado correctamente al $volumenDeseado%!" -ForegroundColor Green
+    Write-Host "`n¡Volumen ajustado correctamente al $volumenDeseado%!" -ForegroundColor Green
     
-    Write-Host "`nPulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }

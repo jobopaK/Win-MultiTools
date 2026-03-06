@@ -55,6 +55,4 @@ function Test-LimpiarTemporales {
     Write-Host "========================================`n"
     
     # Pausa para que el usuario pueda leer los resultados antes de volver al menú
-    Write-Host "Pulsa cualquier tecla para volver al menú principal..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }

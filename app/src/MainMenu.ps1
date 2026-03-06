@@ -51,11 +51,15 @@ while ($true) {
         '1' {
             Write-Host "Ejecutando opciones de Red..." -ForegroundColor Yellow
             if (Get-Command "Test-RepararRed" -ErrorAction SilentlyContinue) {
-                Test-RepararRed
+                $resultado = Test-RepararRed
+                if ($resultado -eq "CANCEL") {
+                    continue
+                }
             }
             else {
                 Write-Host "La función Test-RepararRed no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '2' {
@@ -66,6 +70,7 @@ while ($true) {
             else {
                 Write-Host "La función Test-LimpiarTemporales no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '3' {
@@ -76,11 +81,12 @@ while ($true) {
             else {
                 Write-Host "La función Set-Volumen no está cargada." -ForegroundColor Red
             }
+            Write-Host ""
             Pause
         }
         '0' {
             Write-Host "Saliendo del programa..." -ForegroundColor Green
-            break
+            exit
         }
         default {
             Write-Host "Opción no válida. Por favor, selecciona una opción correcta." -ForegroundColor Red
