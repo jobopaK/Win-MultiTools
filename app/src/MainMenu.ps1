@@ -37,6 +37,7 @@ function Show-Menu {
     Write-Host "1. Herramientas de Red"
     Write-Host "2. Herramientas de Sistema"
     Write-Host "3. Ajustar Volumen del Sistema"
+    Write-Host "4. Información del Sistema"
     Write-Host "0. Salir"
     Write-Host "==========================" -ForegroundColor Cyan
     
@@ -80,6 +81,17 @@ while ($true) {
             }
             else {
                 Write-Host "La función Set-Volumen no está cargada." -ForegroundColor Red
+            }
+            Write-Host ""
+            Pause
+        }
+        '4' {
+            Write-Host "Compilando Información del Sistema..." -ForegroundColor Yellow
+            if (Get-Command "Get-SystemInfo" -ErrorAction SilentlyContinue) {
+                Get-SystemInfo
+            }
+            else {
+                Write-Host "La función Get-SystemInfo no está cargada." -ForegroundColor Red
             }
             Write-Host ""
             Pause
