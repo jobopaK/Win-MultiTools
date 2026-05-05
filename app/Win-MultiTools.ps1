@@ -620,6 +620,17 @@ while ($true) {
             Write-Host ""
             Pause
         }
+                '5' {
+            Write-Host "Buscador de ficheros" -ForegroundColor Yellow
+            if (Get-Command "Search-File" -ErrorAction SilentlyContinue) {
+                Search-File
+            }
+            else {
+                Write-Host "La función Search-File no está cargada." -ForegroundColor Red
+            }
+            Write-Host ""
+            Pause
+        }
         '0' {
             Write-Host "Saliendo del programa..." -ForegroundColor Green
             exit
