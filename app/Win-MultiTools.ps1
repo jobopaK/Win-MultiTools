@@ -562,6 +562,7 @@ function Show-Menu {
     Write-Host "2. Herramientas de Sistema"
     Write-Host "3. Ajustar Volumen del Sistema"
     Write-Host "4. Información del Sistema"
+    Write-Host "5. Búsqueda de fichero"
     Write-Host "0. Salir"
     Write-Host "==========================" -ForegroundColor Cyan
     
